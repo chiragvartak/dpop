@@ -9,7 +9,7 @@ class Agent:
     def __init__(self, i, domain, relations):
         self.i = i
         # self.value = # The current assigned value to this variable (agent).
-        self.domain = domain # A list of values
+        self.domain = domain # A set of values
         self.relations = relations
         self.neighbors = self.getNeighbors()
         # self.parent = # A tuple (id, domain)
@@ -26,7 +26,7 @@ def main():
     def f(xi, xj):
         return x+y
 
-    agent1 = Agent(1, [7,1,4,5], {(1,2): f, (1,4): f, (1,3): f})
+    agent1 = Agent(1, set(7,1,4,5), {(1,2): f, (1,4): f, (1,3): f})
     pprint(vars(agent1))
 
 if __name__ == '__main__':
