@@ -11,15 +11,17 @@ class Agent:
         # self.value = # The current assigned value to this variable (agent).
         self.domain = domain # A set of values
         self.relations = relations
-        self.neighbors = self.getNeighbors()
-        # self.parent = # A tuple (id, domain)
+        self.neighbors = self.getNeighbors() # A set of all the neighbors
+        # self.p = # A tuple (id, domain)
         # self.pp = # A list of tuples of the above form
         # self.c = # A list of tuples of the above form
         # self.pc = # A list of tuples of the above form
         # table = 
+        self.listeningIP = ''
+        self.listeningPort = -1
         
 
-def main():
+def _test():
     from pprint import pprint, pformat
 
     # A relation that takes two variables' values as inputs
@@ -30,4 +32,4 @@ def main():
     pprint(vars(agent1))
 
 if __name__ == '__main__':
-    main()
+    _test()

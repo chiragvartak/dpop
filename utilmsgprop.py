@@ -1,6 +1,14 @@
+
+from __future__ import print_function
+
+import socket
+import pickle
 from itertools import product
 
-def main():
+
+# The function that will *actually* run in the algorithm
+def main(agent):
+
     # If agent has no children
     if len(agent.c) == 0:
         # The message to be sent to parent
