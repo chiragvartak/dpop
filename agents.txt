@@ -1,0 +1,15 @@
+# This file contains information of all the agents in the "world".
+# The information provided in this file can be extracted and used by any agent.
+# Make sure to put an agent's information all on only one line.
+# Seperate entries about an agent with one or more spaces.
+# Dont put spaces inside entries.
+# Lines beginning with # will be ignored.
+
+# Agent 1
+id=1 IP=127.0.0.1 PORT=5001
+
+# Agent 2
+id=2 IP=127.0.0.1 PORT=5002
+
+# Agent 3
+id=3 IP=127.0.0.1 PORT=5003

@@ -31,5 +31,6 @@ def _test():
     agent1 = Agent(1, set(7,1,4,5), {(1,2): f, (1,4): f, (1,3): f})
     pprint(vars(agent1))
 
+
 if __name__ == '__main__':
     _test()
