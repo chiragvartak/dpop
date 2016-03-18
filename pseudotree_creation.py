@@ -6,6 +6,8 @@ import pickle
 import collections
 import threading
 
+import utils
+
 Relatives = collections.namedtuple('Relatives', 'parent pseudoparents children pseudochildren')
 
 
@@ -68,16 +70,16 @@ def main(agent):
     listen.start()
     
     # Procedure for the root agent
-    if len(agent.c) == 0:
+    if agent.is_root == 0:
 
         # Wait till the each agent sends its neighbors' set
         while True:
             all_neighbor_msgs_arrived = True
             for neighbor in agent.neighbors:
                 if ('neighbors_'+neighbor) not in msgs:
-                    all_neighbor_msgss_arrived = False
+                    all_neighbor_msgs_arrived = False
                     break
-            if all_neighbor_msgss_arrived == True:
+            if all_neighbor_msgs_arrived == True:
                 break
 
         # Generate the pseudotree structure
@@ -94,6 +96,7 @@ def main(agent):
         parents = get_parents(pstree)
         depths = assign_depths(pstree)
         
+        agents_info = utils.get_agents_info("agents.txt")
         for neighbor in agent.neighbors:
             p = parents[neighbor]
             c = pstree[neighbor]
@@ -108,4 +111,38 @@ def main(agent):
                 else:
                     pp.append(relative)
 
-            raise NotImplementedError
+            data = pickle.dumps(('ptinfo', Relatives(p, pp, c, pc)))
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            socket.sendto(data, (agents_info[neighbor]['IP'], agents_info[neighbor]['PORT']))
+            sock.close()
+
+        # Send this node's (root's) domain to all children and pseudochildren
+        # For example, if root's id is 1, the message is, in title:value form:
+        # domain_1: <the set which is the domain of 1>
+        p = parents[agent.id]
+        c = pstree[agent.id]
+        pp = []
+        pc = []
+        pseudo_relatives = set(graph[agent.id]) - set(parents[agent.id]) \
+            - set(pstree[agent.id])
+        pseudo_relatives = list(pseudo_relatives)
+        for relative in pseudo_relatives:
+            if depths[agent.id] < depths[relative]:
+                pc.append(relative)
+            else:
+                pp.append(relative)
+
+        for child in c+pc:
+            data = pickle.dumps(('domain_'+str(agent.id), agent.neighbors))
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            socket.sendto(data, (agents_info[child]['IP'], agents_info[child]['PORT']))
+            sock.close()
+
+    # Procedure for agent other than root
+    else:
+        data = pickle.dumps(('neighbors_'+str(agent.id), agent.neighbors))
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        socket.sendto(data, (agents_info[child]['IP'], agents_info[child]['PORT']))
+        sock.close()
+
+        raise NotImplementedError

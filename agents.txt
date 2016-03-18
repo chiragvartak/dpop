@@ -6,7 +6,7 @@
 # Lines beginning with # will be ignored.
 
 # Agent 1
-id=1 IP=127.0.0.1 PORT=5001
+id=1 IP=127.0.0.1 PORT=5001 is_root=True
 
 # Agent 2
 id=2 IP=127.0.0.1 PORT=5002

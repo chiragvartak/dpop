@@ -1,3 +1,4 @@
+import utils
 
 class Agent:
     def getNeighbors(self):
@@ -7,6 +8,9 @@ class Agent:
         return s
     
     def __init__(self, i, domain, relations):
+        # Use this to initialize all agents
+        agents_info = get_agents_info("agents.txt")
+
         self.i = i
         # self.value = # The current assigned value to this variable (agent).
         self.domain = domain # A set of values
@@ -17,8 +21,9 @@ class Agent:
         # self.c = # A list of tuples of the above form
         # self.pc = # A list of tuples of the above form
         # table = 
-        self.listeningIP = ''
-        self.listeningPort = -1
+        self.IP = ''
+        self.PORT = -1
+        self.is_root = False
         
 
 def _test():
