@@ -9,6 +9,7 @@ import collections
 import threading
 
 import utils
+from agent import *
 
 Relatives = collections.namedtuple('Relatives', 'parent pseudoparents children pseudochildren')
 
@@ -177,4 +178,4 @@ def main(agent):
 
         # Store all these domains that have arrived as messages
         for parent in [agent.p]+agent.pp:
-            agents_info[parent] = msgs['domain_'+parent]
+            agent.agents_info[parent] = msgs['domain_'+parent]
