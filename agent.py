@@ -9,22 +9,23 @@ class Agent:
     
     def __init__(self, i, domain, relations):
         # Use this to initialize all agents
-        agents_info = get_agents_info("agents.txt")
+        agents_info = utils.get_agents_info("agents.txt")
 
-        self.i = i
-        # self.value = # The current assigned value to this variable (agent).
-        self.domain = domain # A set of values
-        self.relations = relations
-        self.neighbors = self.getNeighbors() # A set of all the neighbors
-        # self.p = # A tuple (id, domain)
-        # self.pp = # A list of tuples of the above form
-        # self.c = # A list of tuples of the above form
-        # self.pc = # A list of tuples of the above form
-        # table = 
-        self.IP = ''
-        self.PORT = -1
-        self.is_root = False
-        
+        self.i = self.id = i
+        self.value = None  # The current assigned value to this variable (agent).
+        self.domain = domain  # A set of values
+        self.relations = relations  # A dict of functions for each edge in the graph
+        self.neighbors = self.getNeighbors()  # A set of all the neighbors
+        self.p = None  # The parent's id
+        self.pp = None  # A list of the pseudoparents' ids
+        self.c = None  # A list of the childrens' ids
+        self.pc = None # A list of the pseudochildrens' ids
+        # table =  # I don't remember why I had made this
+        self.IP = agents_info[i]['IP']
+        self.PORT = eval(agents_info[i]['PORT'])
+        self.is_root = eval(agents_info[i]['is_root'])
+        self.root_id = eval(agents_info[42]['root_id'])
+
 
 def _test():
     from pprint import pprint, pformat
