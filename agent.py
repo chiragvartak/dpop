@@ -21,8 +21,11 @@ class Agent:
         self.table =  None  # The table that will be stored
         self.IP = agents_info[i]['IP']
         self.PORT = eval(agents_info[i]['PORT'])
-        self.is_root = eval(agents_info[i]['is_root'])
+        self.is_root = False
+        if 'is_root' in agents_info[self.i]:
+            self.is_root = eval(agents_info[self.i]['is_root'])
         self.root_id = eval(agents_info[42]['root_id'])
+        self.msgs = {}  # The dict where all the received messages are stored
 
     def getNeighbors(self):
         s = set()

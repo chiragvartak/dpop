@@ -63,7 +63,7 @@ def assign_depths_helper(depths, pstree, node, value):
 # The function that will *actually* run in the algorithm
 def main(agent):
     # The dict where all the messages are stored
-    msgs = {}
+    msgs = agent.msgs
 
     # Some clock sync functionality will come here
 

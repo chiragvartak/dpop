@@ -44,6 +44,21 @@ def get_util_msg(agent):
     return (util_msg, stored_table)
 
 
+def util_msg_handler(agent):
+    """
+    The util_msg_handler routine in the util_msg_propogation part; this method
+    is run for non-leaf nodes; it waits till all the children of this agent
+    have sent their util_msg, combines them, and then calculates and sends the
+    util_msg to its parent; if this node is the root node, it waits till all
+    the children have sent their util_msg, combines these messages, chooses the
+    assignment for itself with the optimal utility, and then sends this
+    assignment and optimal utility value to all its children and pseudo-
+    children; assumes that the listening thread is active; given the 'agent'
+    which runs this function.
+    """
+    
+
+
 # The function that will *actually* run in the algorithm
 def main(agent):
     if is_leaf(agent):
@@ -56,5 +71,15 @@ def main(agent):
         sock.sendto(data, (info[agent.p]['IP'], info[agent.p]['PORT']))
         sock.close()
     else:
-        
+        # Wait till util_msg from all the children have arrived
+        while True:
+            all_children_msgs_arrived = True
+            for child in agent.c:
+                if ('util_msg_'+child) not in msgs:
+                    all_children_msgs_arrived = False
+                    break
+            if all_children_msgs_arrived == True:
+                break
+
+
 
