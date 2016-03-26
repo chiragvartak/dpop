@@ -178,4 +178,4 @@ def main(agent):
 
         # Store all these domains that have arrived as messages
         for parent in [agent.p]+agent.pp:
-            agent.agents_info[parent] = msgs['domain_'+parent]
+            agent.agents_info[parent]['domain'] = msgs['domain_'+parent]

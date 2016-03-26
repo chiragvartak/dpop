@@ -1,14 +1,12 @@
 import utils
 
 class Agent:
-    def getNeighbors(self):
-        s = set()
-        for first, second in self.relations.keys():
-            s.add(second)
-        return s
-    
     def __init__(self, i, domain, relations):
         # Use this to initialize all agents
+        # This dict will get all the values from the agents.txt file and store them.
+        # Also, the domains of some agents will be added to this dict later on.
+        # You can access a value as:
+        # agent.agents_info[<agent_id>]['field_required']
         agents_info = utils.get_agents_info("agents.txt")
 
         self.i = self.id = i
@@ -20,11 +18,31 @@ class Agent:
         self.pp = None  # A list of the pseudoparents' ids
         self.c = None  # A list of the childrens' ids
         self.pc = None # A list of the pseudochildrens' ids
-        # table =  # I don't remember why I had made this
+        self.table =  None  # The table that will be stored
         self.IP = agents_info[i]['IP']
         self.PORT = eval(agents_info[i]['PORT'])
         self.is_root = eval(agents_info[i]['is_root'])
         self.root_id = eval(agents_info[42]['root_id'])
+
+    def getNeighbors(self):
+        s = set()
+        for first, second in self.relations.keys():
+            s.add(second)
+        return s
+
+    def calculate_util(self, tup, xi):
+        """
+        Calculates the util; given a tuple 'tup' which has the assignments of
+        values of parent and pseudo-parent nodes, in order; given a value 'xi'
+        of this agent.
+        """
+        # Assumed that utilities are combined by adding to each other
+
+        util = self.relations[(self.id, self.p)](xi, tup[0])
+        for x, index in enumerate(tup[1:]):
+            util = util + self.relations[(self.id, self.pp[index])](
+                xi, tup[index])
+        return util
 
 
 def _test():
