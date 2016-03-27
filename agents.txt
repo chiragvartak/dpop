@@ -5,6 +5,7 @@
 # Dont put spaces inside entries.
 # Lines beginning with # will be ignored.
 
+
 # General information
 # Id 42, haha. FTW!
 id=42 root_id=1

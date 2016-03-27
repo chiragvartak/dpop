@@ -1,37 +1,46 @@
+"Defines the class Agent which represents a node/agent in the DPOP algorithm."
+
 import utils
+import pickle
+import socket
+
 
 class Agent:
     def __init__(self, i, domain, relations):
-        # Use this to initialize all agents
-        # This dict will get all the values from the agents.txt file and store them.
+        # Use utils.get_agents_info to initialize all the agents.
+        # All the information from 'agents.txt' will be retrieved and stored in
+        # this dict 'agents_info'.
         # Also, the domains of some agents will be added to this dict later on.
         # You can access a value as:
         # agent.agents_info[<agent_id>]['field_required']
-        agents_info = utils.get_agents_info("agents.txt")
+        # Some miscellaneous information will be stored with id=42.
+        self.agents_info = utils.get_agents_info("agents.txt")
+        info = self.agents_info
 
         self.i = self.id = i
-        self.value = None  # The current assigned value to this variable (agent).
         self.domain = domain  # A set of values
-        self.relations = relations  # A dict of functions for each edge in the graph
-        self.neighbors = self.getNeighbors()  # A set of all the neighbors
+        self.relations = relations  # A dict of functions, for each edge in the
+                                    # graph
+        self.neighbors = self.get_neighbors()  # A list of all the neighbors
+                                               # sorted by ids
         self.p = None  # The parent's id
-        self.pp = None  # A list of the pseudoparents' ids
+        self.pp = None  # A list of the pseudo-parents' ids
         self.c = None  # A list of the childrens' ids
-        self.pc = None # A list of the pseudochildrens' ids
+        self.pc = None # A list of the pseudo-childrens' ids
         self.table =  None  # The table that will be stored
-        self.IP = agents_info[i]['IP']
-        self.PORT = eval(agents_info[i]['PORT'])
+        self.IP = info[self.id]['IP']
+        self.PORT = eval(info[self.id]['PORT'])  # Listening Port
         self.is_root = False
-        if 'is_root' in agents_info[self.i]:
-            self.is_root = eval(agents_info[self.i]['is_root'])
-        self.root_id = eval(agents_info[42]['root_id'])
+        if 'is_root' in info[self.i]:
+            self.is_root = eval(info[self.i]['is_root'])
+        self.root_id = eval(info[42]['root_id'])
         self.msgs = {}  # The dict where all the received messages are stored
 
-    def getNeighbors(self):
-        s = set()
+    def get_neighbors(self):
+        L = []
         for first, second in self.relations.keys():
-            s.add(second)
-        return s
+            L.append(second)
+        return sorted(L)
 
     def calculate_util(self, tup, xi):
         """
@@ -41,11 +50,31 @@ class Agent:
         """
         # Assumed that utilities are combined by adding to each other
 
-        util = self.relations[(self.id, self.p)](xi, tup[0])
+        util = self.relations[self.id, self.p](xi, tup[0])
         for x, index in enumerate(tup[1:]):
-            util = util + self.relations[(self.id, self.pp[index])](
-                xi, tup[index])
+            util = util + self.relations[self.id, self.pp[index]](xi, x)
         return util
+
+    def is_leaf(self):
+        "Return True if this node is a leaf node and False otherwise."
+
+        assert self.c != None, 'self.c not yet initialized.'
+        if self.c == []:
+            return True
+        else:
+            return False
+
+    def udp_send(self, title, data, dest_node_id):
+        """
+        Send a UDP message to the node whose id is given by 'dest_node_id'; the
+        'title' is the message's title string and 'data' is the content object.
+        """
+
+        info = self.agents_info
+        pdata = pickle.dumps((title, data))
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(pdata, (info[dest_node_id]['IP'], info[dest_node_id]))
+        sock.close()
 
 
 def _test():

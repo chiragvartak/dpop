@@ -61,7 +61,7 @@ def util_msg_handler(agent):
 
 # The function that will *actually* run in the algorithm
 def main(agent):
-    if is_leaf(agent):
+    if agent.is_leaf():
         info = agent.agents_info
         util_msg, agent.table = get_util_msg(agent)
         data = pickle.dumps(('util_msg_'+str(agent.id), util_msg))
@@ -80,6 +80,3 @@ def main(agent):
                     break
             if all_children_msgs_arrived == True:
                 break
-
-
-

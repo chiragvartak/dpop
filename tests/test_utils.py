@@ -11,7 +11,8 @@ def test_get_agents_info():
 	x = get_agents_info("agents.txt")
 	y = {1: {'IP': '127.0.0.1', 'PORT': '5001', 'is_root': 'True'},
 	 	 2: {'IP': '127.0.0.1', 'PORT': '5002'},
-	 	 3: {'IP': '127.0.0.1', 'PORT': '5003'}
+	 	 3: {'IP': '127.0.0.1', 'PORT': '5003'},
+         42: {'root_id': '1'}
 	 	}
 	assert x == y
 
