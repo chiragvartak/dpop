@@ -18,7 +18,7 @@ class Agent:
         info = self.agents_info
 
         self.i = self.id = i
-        self.domain = domain  # A set of values
+        self.domain = domain  # A list of values
         self.relations = relations  # A dict of functions, for each edge in the
                                     # graph
         self.neighbors = self.get_neighbors()  # A list of all the neighbors
