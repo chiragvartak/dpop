@@ -2,9 +2,46 @@
 import pytest
 import os
 import sys
+import threading
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from utils import *
+
+
+def test_listen_func():
+    # The agent's IP
+    IP = '127.0.0.1'
+    # The port where the agent listens for messages
+    PORT = 5005
+
+    listening_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    print('Listening socket created')
+    listening_socket.bind((IP, PORT))
+    print('Listening socket bound to port')
+    print("%s:%d" % (IP, PORT))    
+
+    msgs = {}
+    listen = threading.Thread(target=listen_func, args=(msgs, listening_socket))
+    listen.setDaemon(True)
+    listen.start()
+    
+    listening_socket.sendto(pickle.dumps(('greeting', "Kiss kiss to you too")), ("127.0.0.1", 5005))
+    listening_socket.sendto(pickle.dumps(('name', "Rachel")), ("127.0.0.1", 5005))
+    listening_socket.sendto(pickle.dumps((50, "Montana")), ("127.0.0.1", 5005))
+    listening_socket.sendto(pickle.dumps(('food', (125, 'Hamburger'))), ("127.0.0.1", 5005))
+    listening_socket.sendto(pickle.dumps((0, "exit")), ("127.0.0.1", 5005))
+    listening_socket.sendto(pickle.dumps(('ghosts', "shouldn't exist")), ("127.0.0.1", 5005))
+    listen.join()
+    
+    msgs2 = {'greeting': "Kiss kiss to you too",
+            'name': "Rachel",
+            50: "Montana",
+            'food': (125, "Hamburger"),
+            0: "exit"
+           }
+    assert msgs == msgs2
+    listening_socket.close()
+    print('Listening socket closed')
 
 
 def test_get_agents_info():

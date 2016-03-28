@@ -84,5 +84,36 @@ def test_dfsTree():
     assert x == y
 
 
+def test_get_parents():        
+    G = g1
+    x = get_parents(dfsTree(G, 1))
+    y = {1:'Nothing', 2:1, 3:2, 4:3, 7:3, 5:6, 6:7, 8:7, 10:8,
+         11:10, 9:11, 16:11, 13:12, 14:13, 15:14, 12:16
+        }
+    assert x == y
+
+    G = g2
+    x = get_parents(dfsTree(G, 0))
+    y = {0:'Nothing', 1:0, 2:0, 3:1, 4:1, 5:2, 6:2, 7:3, 8:3,
+         9:4, 10:4, 11:5, 12:5, 13:6
+        }
+    assert x == y
+
+    ## Test assign_depths
+    G = g1
+    x = assign_depths(dfsTree(G, 1))
+    y = {'Nothing':-1, 1:0, 2:1, 3:2, 4:3, 7:3, 6:4, 8:4, 10:5,
+         11:6, 9:7, 16:7, 12:8, 13:9, 14:10, 15:11, 5:5
+        }
+    assert x == y
+
+    G = g2
+    x = assign_depths(dfsTree(G, 0))
+    y = {'Nothing':-1, 0:0, 1:1, 2:1, 3:2, 4:2, 5:2, 6:2, 7:3,
+         8:3, 9:3, 10:3, 11:3, 12:3, 13:3
+        }
+    assert x == y
+    
+
 if __name__ == '__main__':
     pytest.main()
