@@ -3,6 +3,7 @@
 import collections
 import pickle
 import socket
+import numpy as np
 
 Relatives = collections.namedtuple('Relatives',
 	'parent pseudoparents children pseudochildren')
@@ -45,3 +46,89 @@ def listen_func(msgs, sock):
         msgs[udata[0]] = udata[1]
         if udata[1] == "exit":
             return
+
+
+def combine(arrays, *ants):
+	"""Return the combined array, given n numpy arrays and their corresponding
+	n assignment-nodeid-tuples ('ants')."""
+
+	assert len(arrays) == len(ants)
+
+	# Calculate the merged ant
+	merged_ant = set()
+	for ant in ants:
+		merged_ant = merged_ant | set(ant)
+	merged_ant = tuple(sorted(tuple(merged_ant)))
+
+	raise NotImplementedError
+
+
+def expand(array, ant, new_ant, new_shape):
+	"""Return the new numpy array after expanding it so that its ant changes
+	from 'ant' to 'new_ant'. The value of the new elements created will be
+	initialized to 0."""
+
+	# The values of the nodeids in ant and new_ant must be sorted.
+	assert new_ant == tuple(sorted(new_ant))
+
+	ant = tuple(sorted(ant))
+	a = array.copy()
+	x = y = -1
+	i = j = 0
+	end_of_ant_reached = False
+
+	while(i != len(new_ant)):
+		x = new_ant[i]
+		try:
+			y = ant[j]
+		except:
+			end_of_ant_reached = True
+
+		if x < y:
+			a, ant = add_dims(a, ant, j, x, new_shape[i])
+			i += 1
+			j += 1
+			continue
+		elif x > y:
+			if not end_of_ant_reached:
+				j += 1
+			else:
+				a, ant = add_dims(a, ant, j, x, new_shape[i])
+				i += 1
+				j += 1
+			continue
+		else: #  x == y
+			i += 1
+			j += 1
+			continue
+
+	return (a, ant)
+
+
+def add_dims(array, ant, index, nodeid, depth):
+	"""Return a numpy array with an additional dimension in the place of index.
+	The values of all additional elements created are 0. The depth of the 
+	'nodeid' is given by 'depth'."""
+
+	assert ant == tuple(sorted(ant))
+
+	a = array.copy()
+	a = np.expand_dims(a, axis=index)
+	zeros = np.zeros(a.shape[:-1] + (depth-1,), dtype=int)
+	a = np.concatenate((a, zeros), axis=index)
+	new_ant = list(ant)
+	print new_ant
+	new_ant.insert(index, nodeid)
+	print new_ant
+	new_ant = tuple(new_ant)
+	print new_ant
+	return (a, new_ant)
+
+
+def prod(S):
+	"""Returns the product of all elements in a sequence S."""
+
+	product = 1
+	for i in S:
+		product = product * i
+	return product
