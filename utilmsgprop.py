@@ -134,32 +134,17 @@ def util_msg_handler(agent):
         agent.udp_send('util_msg_'+str(agent.id), msg_to_send, agent.p)
 
 
-
-
-
-# The function that will *actually* run in the algorithm
-def main(agent):
+def util_msg_prop(agent):
     if agent.is_leaf():
         info = agent.agents_info
         util_msg, agent.table = get_util_msg(agent)
-        data = pickle.dumps(('util_msg_'+str(agent.id), util_msg))
 
-        # Send the util_msg to parent of this agent.
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(data, (info[agent.p]['IP'], info[agent.p]['PORT']))
-        sock.close()
+        # Send 'util_msg_<ownid>'' to parent
+        agent.udp_send('util_msg_'+str(agent.id), util_msg, agent.p)
 
         # Send the assignment-nodeid-tuple
         agent.udp_send('pre_util_msg_'+str(agent.id),
             [agent.p]+agent.pp, agent.p)
 
     else:
-        # Wait till util_msg from all the children have arrived
-        while True:
-            all_children_msgs_arrived = True
-            for child in agent.c:
-                if ('util_msg_'+child) not in msgs:
-                    all_children_msgs_arrived = False
-                    break
-            if all_children_msgs_arrived == True:
-                break
+        util_msg_handler(agent)
