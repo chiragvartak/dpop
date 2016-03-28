@@ -92,7 +92,7 @@ def util_msg_handler(agent):
     while True:
         all_children_msgs_arrived = True
         for child in agent.c:
-            if ('util_msg_'+child) not in msgs:
+            if ('util_msg_'+str(child)) not in agent.msgs:
                 all_children_msgs_arrived = False
                 break
         if all_children_msgs_arrived == True:
@@ -113,6 +113,8 @@ def util_msg_handler(agent):
         utils = list(combined_msg)
         max_util = max(utils)
         xi_star = agent.domain[utils.index(max_util)]
+        agent.value = xi_star
+        agent.max_util = max_util
 
         # Send 'value_msg_<rootid>' xi_star to all children and pseudo-children
         for node in c+pc:
