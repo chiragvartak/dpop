@@ -48,11 +48,24 @@ def listen_func(msgs, sock):
             return
 
 
-def combine(arrays, *ants):
+def combine(*args):
 	"""Return the combined array, given n numpy arrays and their corresponding
 	n assignment-nodeid-tuples ('ants')."""
 
-	assert len(arrays) == len(ants)
+	largs = len(args)
+	arrays = args[:largs/2]
+	ants = args[largs/2:]
+
+	# Calculate the new shape
+	D = {}
+	for arr, ant in zip(arrays, ants):
+		shape = arr.shape
+		for nodeid, depth in zip(ant, shape):
+			if nodeid in D:
+				continue
+			else:
+				D[nodeid] = depth
+	new_shape = tuple([D[key] for key in sorted(D)])
 
 	# Calculate the merged ant
 	merged_ant = set()
@@ -60,7 +73,12 @@ def combine(arrays, *ants):
 		merged_ant = merged_ant | set(ant)
 	merged_ant = tuple(sorted(tuple(merged_ant)))
 
-	raise NotImplementedError
+	merged_array, _ = expand(arrays[0], ants[0], merged_ant, new_shape)
+	for array, ant in zip(arrays[1:], ants[1:]):
+		new_array, _ = expand(array, ant, merged_ant, new_shape)
+		merged_array += new_array
+
+	return (merged_array, merged_ant)
 
 
 def expand(array, ant, new_ant, new_shape):
@@ -102,6 +120,8 @@ def expand(array, ant, new_ant, new_shape):
 			j += 1
 			continue
 
+	# Checking if ant has changed properly
+	assert ant == new_ant
 	return (a, ant)
 
 
@@ -112,17 +132,27 @@ def add_dims(array, ant, index, nodeid, depth):
 
 	assert ant == tuple(sorted(ant))
 
+	# a = array.copy()
+	# a = np.expand_dims(a, axis=index)
+	# zeros_dim = list(a.shape)
+	# zeros_dim[index] = depth - 1
+	# zeros_dim = tuple(zeros_dim)
+	# zeros = np.zeros(zeros_dim, dtype=int)
+	# a = np.concatenate((a, zeros), axis=index)
+	# new_ant = list(ant)
+	# new_ant.insert(index, nodeid)
+	# new_ant = tuple(new_ant)
+	# return (a, new_ant)
+
 	a = array.copy()
 	a = np.expand_dims(a, axis=index)
-	zeros = np.zeros(a.shape[:-1] + (depth-1,), dtype=int)
-	a = np.concatenate((a, zeros), axis=index)
+	new_a = a
+	for _ in range(depth-1):
+		new_a = np.concatenate((new_a, a), axis=index)
 	new_ant = list(ant)
-	print new_ant
 	new_ant.insert(index, nodeid)
-	print new_ant
 	new_ant = tuple(new_ant)
-	print new_ant
-	return (a, new_ant)
+	return (new_a, new_ant)
 
 
 def prod(S):
