@@ -33,6 +33,9 @@ def listen_func(msgs, sock):
     messages in the dict 'msgs', until an 'exit' message is received. See
     comments in the source code for more information.
     """
+
+    print 'Begin listen_func'
+
     while True:
         # The 'data' which is received should be the pickled string
         # representation of a tuple.
@@ -44,8 +47,12 @@ def listen_func(msgs, sock):
         data, addr = sock.recvfrom(1024)
         udata = pickle.loads(data) # Unpickled data
         msgs[udata[0]] = udata[1]
+        print 'Msg received, ' + udata[0] + ": " + str(udata[1])
         if udata[1] == "exit":
+            print str(agent.id)+': End listen_func'
             return
+
+    print 'End listen_func'
 
 
 def combine(*args):

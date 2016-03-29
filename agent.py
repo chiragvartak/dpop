@@ -4,6 +4,10 @@ import utils
 import pickle
 import socket
 
+import pseudotree_creation
+import utilmsgprop
+import valuemsgprop
+
 
 class Agent:
     def __init__(self, i, domain, relations):
@@ -51,9 +55,8 @@ class Agent:
         of this agent.
         """
         # Assumed that utilities are combined by adding to each other
-
         util = self.relations[self.id, self.p](xi, tup[0])
-        for x, index in enumerate(tup[1:]):
+        for index, x in enumerate(tup[1:]):
             util = util + self.relations[self.id, self.pp[index]](xi, x)
         return util
 
@@ -71,12 +74,23 @@ class Agent:
         Send a UDP message to the node whose id is given by 'dest_node_id'; the
         'title' is the message's title string and 'data' is the content object.
         """
+        print str(self.id) + ': udp_send, sending a message' 
 
         info = self.agents_info
         pdata = pickle.dumps((title, data))
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(pdata, (info[dest_node_id]['IP'], info[dest_node_id]))
+        sock.sendto(pdata, (info[dest_node_id]['IP'], int(info[dest_node_id]['PORT'])))
         sock.close()
+
+        print str(self.id) + ': Message sent, ' + \
+            title + ": " + str(data)
+
+    def start(self):
+        print str(self.id)+': Started'
+        pseudotree_creation.pseudotree_creation(self)
+        utilmsgprop.util_msg_prop(self)
+        valuemsgprop.value_msg_prop(self)
+        print str(self.id)+': Finished'
 
 
 def _test():
@@ -86,7 +100,7 @@ def _test():
     def f(xi, xj):
         return x+y
 
-    agent1 = Agent(1, set(7,1,4,5), {(1,2): f, (1,4): f, (1,3): f})
+    agent1 = Agent(1, [7, 1, 4, 5], {(1,2): f, (1,4): f, (1,3): f})
     pprint(vars(agent1))
 
 

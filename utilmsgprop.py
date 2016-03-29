@@ -8,7 +8,8 @@ import itertools
 import socket
 import pickle
 
-from agent import agent
+import agent
+import utils
 
 
 def get_util_msg(agent):
@@ -22,17 +23,16 @@ def get_util_msg(agent):
     parent_domain = info[agent.p]['domain']
     # Calculate the dimensions of the util_msg
     # The dimensions of util_msg and table_stored will be the same.
-    dim_util_msg
-        = [len(parent_domain)] + [len(info[x]['domain']) for x in agent.pp]
-    dim_util_msg = dim_stored_table
-        = tuple(dim_util_msg)
+    dim_util_msg = \
+        [len(parent_domain)] + [len(info[x]['domain']) for x in agent.pp]
+    dim_util_msg = dim_stored_table = tuple(dim_util_msg)
     util_msg = np.zeros(dim_util_msg, dtype=int)
     stored_table = np.zeros(dim_util_msg, dtype=int)
 
     lists = [parent_domain] + [info[x]['domain'] for x in agent.pp]
-    indices = range(len(parent_domain)) + \
+    indices = [range(len(parent_domain))] + \
         [range(len(info[x]['domain'])) for x in agent.pp]
-    for item, index in zip(itertools.product(lists), itertools.product(indices)):
+    for item, index in zip(itertools.product(*lists), itertools.product(*indices)):
         max_util = -1
         xi_val = -1
         for xi in agent.domain:
@@ -64,11 +64,11 @@ def get_util_cube(agent):
     util_msg = np.zeros(dim_util_msg, dtype=int)
 
     lists = [parent_domain] + [info[x]['domain'] for x in agent.pp]
-    indices = range(len(parent_domain)) + \
+    indices = [range(len(parent_domain))] + \
         [range(len(info[x]['domain'])) for x in agent.pp]
 
-    for item, index in zip(itertools.product(lists), itertools.product(indices)):
-        for xi, i in enumerate(agent.domain):
+    for item, index in zip(itertools.product(*lists), itertools.product(*indices)):
+        for i, xi in enumerate(agent.domain):
             util = agent.calculate_util(item, xi)
             util_msg[(i,)+index] = util
 
@@ -102,17 +102,17 @@ def util_msg_handler(agent):
     for child in sorted(agent.c):
         util_msgs.append(agent.msgs['util_msg_'+str(child)])
     for child in sorted(agent.c):
-        util_msgs.append(agent.msgs['pre_util_msg__'+str(child)]):
-    combined_msg, combined_ant = combine(util_msgs)
+        util_msgs.append(agent.msgs['pre_util_msg_'+str(child)])
+    combined_msg, combined_ant = utils.combine(*util_msgs)
 
     info = agent.agents_info
     if agent.is_root:
         assert combined_ant == (agent.id, )
 
         # Choose the optimal utility
-        utils = list(combined_msg)
-        max_util = max(utils)
-        xi_star = agent.domain[utils.index(max_util)]
+        utilities = list(combined_msg)
+        max_util = max(utilities)
+        xi_star = agent.domain[utilities.index(max_util)]
         agent.value = xi_star
         agent.max_util = max_util
 
@@ -122,6 +122,11 @@ def util_msg_handler(agent):
     else:
         util_cube, _ = get_util_cube(agent)
         _, agent.table = get_util_msg(agent)
+
+        print 'util_cube', util_cube
+        print 'combined_msg', combined_msg
+        print 'ant', tuple([agent.id] + [agent.p] + agent.pp)
+        print 'combined_ant', combined_ant
 
         combined_cube, cube_ant = utils.combine(
             util_cube, combined_msg,
@@ -133,20 +138,29 @@ def util_msg_handler(agent):
         ownid_index = L_ant.index(agent.id)
         msg_to_send = np.maximum.reduce(combined_cube, axis=ownid_index)
 
+        # Send the assignment-nodeid-tuple
+        agent.udp_send('pre_util_msg_'+str(agent.id),
+            tuple([agent.p]+agent.pp), agent.p)
+
         agent.udp_send('util_msg_'+str(agent.id), msg_to_send, agent.p)
 
 
 def util_msg_prop(agent):
+
+    print str(agent.id)+': Begin util_msg_prop'
+
     if agent.is_leaf():
         info = agent.agents_info
         util_msg, agent.table = get_util_msg(agent)
 
+        # Send the assignment-nodeid-tuple
+        agent.udp_send('pre_util_msg_'+str(agent.id),
+            tuple([agent.p]+agent.pp), agent.p)
+
         # Send 'util_msg_<ownid>'' to parent
         agent.udp_send('util_msg_'+str(agent.id), util_msg, agent.p)
 
-        # Send the assignment-nodeid-tuple
-        agent.udp_send('pre_util_msg_'+str(agent.id),
-            [agent.p]+agent.pp, agent.p)
-
     else:
         util_msg_handler(agent)
+
+    print str(agent.id)+': End util_msg_prop'
