@@ -70,14 +70,15 @@ def pseudotree_creation(agent):
     listening_socket.bind((info[agent.id]['IP'], int(info[agent.id]['PORT'])))
     # Creating and starting the 'listen' thread
     listen = threading.Thread(target=utils.listen_func,
-                              args=(msgs, listening_socket))
+                              args=(msgs, listening_socket),
+                              kwargs={'agent': agent})
     listen.setDaemon(True)
     listen.start()
     
     # Wait before all agents have started listening
-    print 'Waiting ...'
+    print str(agent.id) + ': Waiting ...'
     time.sleep(10)
-    print 'Continuing'
+    print str(agent.id) + ': Continuing'
 
     if agent.is_root:
         # Wait till the each agent sends its neighbors' list.

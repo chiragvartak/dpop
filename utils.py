@@ -27,14 +27,18 @@ def get_agents_info(filepath):
     return agents_info
 
 
-def listen_func(msgs, sock):
+def listen_func(msgs, sock, agent):
     """
     Continuously listens on the IP and Port specified in 'sock', and stores the
     messages in the dict 'msgs', until an 'exit' message is received. See
     comments in the source code for more information.
     """
 
-    print 'Begin listen_func'
+    if agent == None:
+        agent_id = 'No agent'
+    else:
+        agent_id = agent.id
+    print str(agent_id) + ': Begin listen_func'
 
     while True:
         # The 'data' which is received should be the pickled string
@@ -47,12 +51,12 @@ def listen_func(msgs, sock):
         data, addr = sock.recvfrom(1024)
         udata = pickle.loads(data) # Unpickled data
         msgs[udata[0]] = udata[1]
-        print 'Msg received, ' + udata[0] + ": " + str(udata[1])
+        print str(agent_id) + ': Msg received, ' + udata[0] + ": " + str(udata[1])
         if udata[1] == "exit":
-            print str(agent.id)+': End listen_func'
+            print str(agent_id)+': End listen_func'
             return
 
-    print 'End listen_func'
+    print str(agent.id) + ': End listen_func'
 
 
 def combine(*args):

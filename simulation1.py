@@ -1,4 +1,6 @@
 
+import os
+
 import agent
 
 ## Simulation 1
@@ -71,9 +73,38 @@ agent2 = agent.Agent(2, [0, 1],
 agent3 = agent.Agent(3, [0, 1],
     {(3, 1): f31,
      (3, 2): f32})
-agent4 = agent.Agent(4, [0, 1], {(4,2): f42})
+agent4 = agent.Agent(4, [0, 1], {(4,2): f42})    
 
-agent1.start()
+# A trick so that this process is allowed to fork.
+pid = os.getpid()
 
-print 'max_util: ', agent1.max_util
-print 'agent1: ', agent1.value
+children = []
+
+if pid == os.getpid():
+    childid = os.fork()
+    children.append(childid)
+    if childid == 0:
+        agent2.start()
+        print 'agent2:', agent2.value
+
+if pid == os.getpid():
+    childid = os.fork()
+    children.append(childid)
+    if childid == 0:
+        agent3.start()
+        print 'agent3:', agent3.value
+
+if pid == os.getpid():
+    childid = os.fork()
+    children.append(childid)
+    if childid == 0:
+        agent4.start()
+        print 'agent4:', agent4.value
+
+if pid == os.getpid():
+    agent1.start()
+    print 'max_util:', agent1.max_util
+    print 'agent1:', agent1.value
+    for i in children:
+        os.wait()
+

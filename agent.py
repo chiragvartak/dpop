@@ -84,7 +84,7 @@ class Agent:
         Send a UDP message to the node whose id is given by 'dest_node_id'; the
         'title' is the message's title string and 'data' is the content object.
         """
-        print str(self.id) + ': udp_send, sending a message' 
+        print str(self.id) + ': udp_send, sending a message ...' 
 
         info = self.agents_info
         pdata = pickle.dumps((title, data))
@@ -92,8 +92,7 @@ class Agent:
         sock.sendto(pdata, (info[dest_node_id]['IP'], int(info[dest_node_id]['PORT'])))
         sock.close()
 
-        print str(self.id) + ': Message sent, ' + \
-            title + ": " + str(data)
+        print str(self.id) + ': Message sent, ' + title + ": " + str(data)
 
     def start(self):
         print str(self.id)+': Started'

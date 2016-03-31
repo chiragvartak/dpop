@@ -123,11 +123,6 @@ def util_msg_handler(agent):
         util_cube, _ = get_util_cube(agent)
         _, agent.table = get_util_msg(agent)
 
-        print 'util_cube', util_cube
-        print 'combined_msg', combined_msg
-        print 'ant', tuple([agent.id] + [agent.p] + agent.pp)
-        print 'combined_ant', combined_ant
-
         combined_cube, cube_ant = utils.combine(
             util_cube, combined_msg,
             tuple([agent.id] + [agent.p] + agent.pp), combined_ant

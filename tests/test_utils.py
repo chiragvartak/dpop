@@ -22,7 +22,7 @@ def test_listen_func():
     print("%s:%d" % (IP, PORT))    
 
     msgs = {}
-    listen = threading.Thread(target=listen_func, args=(msgs, listening_socket))
+    listen = threading.Thread(target=listen_func, args=(msgs, listening_socket), kwargs={'agent': None})
     listen.setDaemon(True)
     listen.start()
     
