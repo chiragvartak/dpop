@@ -3,6 +3,7 @@ import pytest
 import os
 import sys
 import threading
+from pprint import pprint
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from utils import *
@@ -27,17 +28,17 @@ def test_listen_func():
     
     listening_socket.sendto(pickle.dumps(('greeting', "Kiss kiss to you too")), ("127.0.0.1", 5005))
     listening_socket.sendto(pickle.dumps(('name', "Rachel")), ("127.0.0.1", 5005))
-    listening_socket.sendto(pickle.dumps((50, "Montana")), ("127.0.0.1", 5005))
+    listening_socket.sendto(pickle.dumps(('50', "Montana")), ("127.0.0.1", 5005))
     listening_socket.sendto(pickle.dumps(('food', (125, 'Hamburger'))), ("127.0.0.1", 5005))
-    listening_socket.sendto(pickle.dumps((0, "exit")), ("127.0.0.1", 5005))
+    listening_socket.sendto(pickle.dumps(('0', "exit")), ("127.0.0.1", 5005))
     listening_socket.sendto(pickle.dumps(('ghosts', "shouldn't exist")), ("127.0.0.1", 5005))
     listen.join()
     
     msgs2 = {'greeting': "Kiss kiss to you too",
             'name': "Rachel",
-            50: "Montana",
+            '50': "Montana",
             'food': (125, "Hamburger"),
-            0: "exit"
+            '0': "exit"
            }
     assert msgs == msgs2
     listening_socket.close()
@@ -45,13 +46,14 @@ def test_listen_func():
 
 
 def test_get_agents_info():
-	x = get_agents_info("agents.txt")
-	y = {1: {'IP': '127.0.0.1', 'PORT': '5001', 'is_root': 'True'},
-    	 2: {'IP': '127.0.0.1', 'PORT': '5002'},
-    	 3: {'IP': '127.0.0.1', 'PORT': '5003'},
+    x = get_agents_info("agents.txt")
+    y = {1: {'IP': '127.0.0.1', 'PORT': '5001', 'is_root': 'True'},
+         2: {'IP': '127.0.0.1', 'PORT': '5002'},
+         3: {'IP': '127.0.0.1', 'PORT': '5003'},
+         4: {'IP': '127.0.0.1', 'PORT': '5004'},
          42: {'root_id': '1'}
-    	}
-	assert x == y
+        }
+    assert x == y
 
 
 def test_combine():
@@ -117,11 +119,26 @@ def test_combine():
                   [[ 8,10,12,14],
                    [12,14,16,18],
                    [16,18,20,22]]])
-    print x
-    print
-    print y
     assert np.array_equal(x, y)
     assert merged_ant == (7, 8, 9)
+
+    a = np.array([[0, 1],
+                  [1, 2]])
+    a_ant = (9, 7)
+    b = np.array([[0, 1],
+                  [1, 2]])
+    b_ant = (7, 9)
+    x, merged_ant = combine(a, b, a_ant, b_ant)
+    y = np.array([[0, 2],
+                  [2, 4]])
+    print 'x:'
+    print x
+    print 'y:'
+    print y
+    print 'x_ant:', merged_ant
+    print 'y_ant:', (7, 9)
+    assert np.array_equal(x, y)
+    assert merged_ant == (7, 9)
 
 
 def test_add_dims():
@@ -168,4 +185,4 @@ def test_expand():
 
 
 if __name__ == "__main__":
-	pytest.main()
+    pytest.main()

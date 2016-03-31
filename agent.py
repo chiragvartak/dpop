@@ -27,6 +27,8 @@ class Agent:
         self.domain = domain  # A list of values
         self.relations = relations  # A dict of functions, for each edge in the
                                     # graph
+        self.graph_nodes = self.get_graph_nodes()  # A list of all the nodes in
+                                                   # the graph, except itself
         self.neighbors = self.get_neighbors()  # A list of all the neighbors
                                                # sorted by ids
         self.p = None  # The parent's id
@@ -41,6 +43,14 @@ class Agent:
             self.is_root = eval(info[self.i]['is_root'])
         self.root_id = eval(info[42]['root_id'])
         self.msgs = {}  # The dict where all the received messages are stored
+
+    def get_graph_nodes(self):
+        info = self.agents_info
+        graph_nodes = []
+        for key in info:
+            if key != 42 and key != self.id:
+                graph_nodes.append(key)
+        return graph_nodes
 
     def get_neighbors(self):
         L = []
@@ -89,7 +99,8 @@ class Agent:
         print str(self.id)+': Started'
         pseudotree_creation.pseudotree_creation(self)
         utilmsgprop.util_msg_prop(self)
-        valuemsgprop.value_msg_prop(self)
+        if not self.is_root:
+            valuemsgprop.value_msg_prop(self)
         print str(self.id)+': Finished'
 
 

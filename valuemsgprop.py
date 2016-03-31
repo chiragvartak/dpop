@@ -13,10 +13,9 @@ def value_msg_prop(agent):
         if all_parent_msgs_arrived == True:
             break
 
-    ant = tuple([agent.p]+agent+pp)
     index = []
-    for nodeid in ant:
-        index = index.append(str(msgs['value_msg_'+str(nodeid)]))
+    for nodeid in [agent.p]+agent.pp:
+        index.append(agent.msgs['value_msg_'+str(nodeid)])
     index = tuple(index)
     agent.value = agent.table[index]
 

@@ -83,8 +83,8 @@ def pseudotree_creation(agent):
         # Wait till the each agent sends its neighbors' list.
         while True:
             all_neighbor_msgs_arrived = True
-            for neighbor in agent.neighbors:
-                if ('neighbors_'+str(neighbor)) not in msgs:
+            for node in agent.graph_nodes:
+                if ('neighbors_'+str(node)) not in msgs:
                     all_neighbor_msgs_arrived = False
                     break
             if all_neighbor_msgs_arrived == True:

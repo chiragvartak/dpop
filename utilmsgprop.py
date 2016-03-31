@@ -72,7 +72,7 @@ def get_util_cube(agent):
             util = agent.calculate_util(item, xi)
             util_msg[(i,)+index] = util
 
-    return util_msg
+    return util_msg, dim_util_msg
 
 
 def util_msg_handler(agent):
@@ -117,7 +117,7 @@ def util_msg_handler(agent):
         agent.max_util = max_util
 
         # Send 'value_msg_<rootid>' xi_star to all children and pseudo-children
-        for node in c+pc:
+        for node in agent.c+agent.pc:
             agent.udp_send('value_msg_'+str(agent.id), xi_star, node)
     else:
         util_cube, _ = get_util_cube(agent)
