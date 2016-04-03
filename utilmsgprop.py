@@ -11,8 +11,6 @@ import pickle
 import agent
 import utils
 
-import pdb
-
 def get_util_msg(agent):
     """
     Get the util_msg to be sent to the parent and the table to be stored as
@@ -125,23 +123,29 @@ def util_msg_handler(agent):
     else:
         util_cube, _ = get_util_cube(agent)
 
-        # The culprit line
-        # _, agent.table = get_util_msg(agent)
-
         combined_cube, cube_ant = utils.combine(
             util_cube, combined_msg,
             tuple([agent.id] + [agent.p] + agent.pp), combined_ant
             )
-
-        if agent.id == 2:
-            pdb.set_trace()
 
         # Removing own dimension by taking maximum
         L_ant = list(cube_ant)
         ownid_index = L_ant.index(agent.id)
         msg_to_send = np.maximum.reduce(combined_cube, axis=ownid_index)
 
-        ##
+        # Creating the table to store
+        cc = combined_cube
+        table_shape = list(cc.shape[:])
+        del table_shape[ownid_index]
+        table_shape = tuple(table_shape)
+        
+        table = np.zeros(table_shape, dtype=int)
+        cc_rolled = np.rollaxis(cc, ownid_index)
+        for i, abc in enumerate(cc_rolled):
+            for index, _ in np.ndenumerate(abc):
+                if abc[index] == msg_to_send[index]:
+                    table[index] = agent.domain[i]
+        agent.table = table  
 
         # Send the assignment-nodeid-tuple
         agent.udp_send('pre_util_msg_'+str(agent.id),
