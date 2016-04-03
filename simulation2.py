@@ -1,13 +1,21 @@
+# A simulation with negative values
+# Simulation 2
+
+# This module illustrates a simulation using negative util values.
+# You can model a cost problem like this; just convert the (+ve) cost values to
+# (-ve) utility values.
 
 import os
 
 import agent
 
+
 def f12(x1, x2):
     if (x1, x2) == (0, 0): return -3
     elif (x1, x2) == (0, 1): return -2
     elif (x1, x2) == (1, 0): return -4
-    else: return -1
+    elif (x1, x2) == (1, 1): return -1
+    else: raise ValueError
 
 def f21(x2, x1):
     return f12(x1, x2)
@@ -16,7 +24,8 @@ def f13(x1, x3):
     if (x1, x3) == (0, 0): return -1
     elif (x1, x3) == (0, 1): return -2
     elif (x1, x3) == (1, 0): return -2
-    else: return -1
+    elif (x1, x3) == (1, 1): return -1
+    else: raise ValueError
 
 def f31(x3, x1):
     return f13(x1, x3)
@@ -25,7 +34,8 @@ def f23(x2, x3):
     if (x2, x3) == (0, 0): return -2
     elif (x2, x3) == (0, 1): return -3
     elif (x2, x3) == (1, 0): return -1
-    else: return -3
+    elif (x2, x3) == (1, 1): return -3
+    else: raise ValueError
 
 def f32(x3, x2):
     return f23(x2, x3)
@@ -34,7 +44,8 @@ def f24(x2, x4):
     if (x2, x4) == (0, 0): return -2
     elif (x2, x4) == (0, 1): return -1
     elif (x2, x4) == (1, 0): return -4
-    else: return -2
+    elif (x2, x4) == (1, 1): return -2
+    else: raise ValueError
 
 def f42(x4, x2):
     return f24(x2, x4)
@@ -83,4 +94,3 @@ if pid == os.getpid():
     print 'agent1:', agent1.value
     for i in children:
         os.wait()
-

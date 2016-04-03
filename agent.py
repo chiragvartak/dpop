@@ -22,7 +22,7 @@ class Agent:
         info = self.agents_info
 
         self.value = -1  # The value that will be selected for this agent
-        self.max_util = -1  # Will be initialized only for the root, in the end
+        self.max_util = float("-inf")  # Will be initialized only for the root, in the end
         self.i = self.id = i
         self.domain = domain  # A list of values
         self.relations = relations  # A dict of functions, for each edge in the

@@ -98,9 +98,20 @@ def expand(array, ant, new_ant, new_shape):
     initialized to 0."""
 
     # The values of the nodeids in ant and new_ant must be sorted.
-    assert new_ant == tuple(sorted(new_ant))
+    # Insertion sort is used as there is already an inbuilt function in numpy
+    # to swap axes.
+    ant = list(ant)
+    for j in range(len(ant) - 1):
+        i_min = j
+        for i in range(j+1, len(ant)):
+            if ant[i] < ant[i_min]:
+                i_min = i
 
-    ant = tuple(sorted(ant))
+        if i_min != j:
+            array = np.swapaxes(array, i_min, j)
+            ant[j], ant[i_min] = ant[i_min], ant[j]
+    ant = tuple(ant)
+
     a = array.copy()
     x = y = -1
     i = j = 0

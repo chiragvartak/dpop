@@ -26,14 +26,14 @@ def get_util_msg(agent):
     dim_util_msg = \
         [len(parent_domain)] + [len(info[x]['domain']) for x in agent.pp]
     dim_util_msg = dim_stored_table = tuple(dim_util_msg)
-    util_msg = np.zeros(dim_util_msg, dtype=int)
-    stored_table = np.zeros(dim_util_msg, dtype=int)
+    util_msg = np.empty(dim_util_msg, dtype=int)
+    stored_table = np.empty(dim_util_msg, dtype=int)
 
     lists = [parent_domain] + [info[x]['domain'] for x in agent.pp]
     indices = [range(len(parent_domain))] + \
         [range(len(info[x]['domain'])) for x in agent.pp]
     for item, index in zip(itertools.product(*lists), itertools.product(*indices)):
-        max_util = -1
+        max_util = agent.max_util
         xi_val = -1
         for xi in agent.domain:
             util = agent.calculate_util(item, xi)
@@ -103,6 +103,7 @@ def util_msg_handler(agent):
         util_msgs.append(agent.msgs['util_msg_'+str(child)])
     for child in sorted(agent.c):
         util_msgs.append(agent.msgs['pre_util_msg_'+str(child)])
+
     combined_msg, combined_ant = utils.combine(*util_msgs)
 
     info = agent.agents_info

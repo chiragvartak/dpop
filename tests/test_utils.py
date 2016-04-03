@@ -131,14 +131,26 @@ def test_combine():
     x, merged_ant = combine(a, b, a_ant, b_ant)
     y = np.array([[0, 2],
                   [2, 4]])
+    
+    assert np.array_equal(x, y)
+    assert merged_ant == (7, 9)
+
+    a = np.array([-1, -2])
+    a_ant = (2,)
+    b = np.array([[-3, -4],
+                  [-2, -3]])
+    b_ant = (2, 1)
+    x, merged_ant = combine(a, b, a_ant, b_ant)
+    y = np.array([[-4, -4],
+                  [-5, -5]])
     print 'x:'
     print x
     print 'y:'
     print y
     print 'x_ant:', merged_ant
-    print 'y_ant:', (7, 9)
+    print 'y_ant:', (1, 2)
     assert np.array_equal(x, y)
-    assert merged_ant == (7, 9)
+    assert merged_ant == (1, 2)
 
 
 def test_add_dims():
