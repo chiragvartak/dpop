@@ -11,6 +11,7 @@ import pickle
 import agent
 import utils
 
+import pdb
 
 def get_util_msg(agent):
     """
@@ -32,6 +33,7 @@ def get_util_msg(agent):
     lists = [parent_domain] + [info[x]['domain'] for x in agent.pp]
     indices = [range(len(parent_domain))] + \
         [range(len(info[x]['domain'])) for x in agent.pp]
+
     for item, index in zip(itertools.product(*lists), itertools.product(*indices)):
         max_util = agent.max_util
         xi_val = -1
@@ -61,7 +63,7 @@ def get_util_cube(agent):
     dim_util_msg = [len(agent.domain)] + [len(parent_domain)] + \
         [len(info[x]['domain']) for x in agent.pp]
     dim_util_msg = tuple(dim_util_msg)
-    util_msg = np.zeros(dim_util_msg, dtype=int)
+    util_msg = np.empty(dim_util_msg, dtype=int)
 
     lists = [parent_domain] + [info[x]['domain'] for x in agent.pp]
     indices = [range(len(parent_domain))] + \
@@ -122,17 +124,24 @@ def util_msg_handler(agent):
             agent.udp_send('value_msg_'+str(agent.id), xi_star, node)
     else:
         util_cube, _ = get_util_cube(agent)
-        _, agent.table = get_util_msg(agent)
+
+        # The culprit line
+        # _, agent.table = get_util_msg(agent)
 
         combined_cube, cube_ant = utils.combine(
             util_cube, combined_msg,
             tuple([agent.id] + [agent.p] + agent.pp), combined_ant
             )
 
+        if agent.id == 2:
+            pdb.set_trace()
+
         # Removing own dimension by taking maximum
         L_ant = list(cube_ant)
         ownid_index = L_ant.index(agent.id)
         msg_to_send = np.maximum.reduce(combined_cube, axis=ownid_index)
+
+        ##
 
         # Send the assignment-nodeid-tuple
         agent.udp_send('pre_util_msg_'+str(agent.id),
