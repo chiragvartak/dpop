@@ -15,12 +15,13 @@ def value_msg_prop(agent):
 
     index = []
     for nodeid in [agent.p]+agent.pp:
-        domain = agent.msgs['domain_'+str(nodeid)]
-        index.append(domain.index(agent.msgs['value_msg_'+str(nodeid)]))
+        index.append(agent.msgs['value_msg_'+str(nodeid)])
     index = tuple(index)
     agent.value = agent.table[index]
 
     for child in agent.c+agent.pc:
-        agent.udp_send('value_msg_'+str(agent.id), agent.value, child)
+        # Send the index of assigned value
+        ind = agent.domain.index(agent.value)
+        agent.udp_send('value_msg_'+str(agent.id), ind, child)
 
     print str(agent.id)+': End value_msg_prop'

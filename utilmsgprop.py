@@ -104,6 +104,7 @@ def util_msg_handler(agent):
     for child in sorted(agent.c):
         util_msgs.append(agent.msgs['pre_util_msg_'+str(child)])
 
+    # Combine the util_msgs received from all children
     combined_msg, combined_ant = utils.combine(*util_msgs)
 
     info = agent.agents_info
@@ -119,10 +120,13 @@ def util_msg_handler(agent):
 
         # Send 'value_msg_<rootid>' xi_star to all children and pseudo-children
         for node in agent.c+agent.pc:
-            agent.udp_send('value_msg_'+str(agent.id), xi_star, node)
+            # Send the index of assigned value
+            ind = agent.domain.index(xi_star)
+            agent.udp_send('value_msg_'+str(agent.id), ind, node)
     else:
         util_cube, _ = get_util_cube(agent)
 
+        # Combine the 2 cubes
         combined_cube, cube_ant = utils.combine(
             util_cube, combined_msg,
             tuple([agent.id] + [agent.p] + agent.pp), combined_ant
