@@ -147,7 +147,7 @@ def util_msg_handler(agent):
             for index, _ in np.ndenumerate(abc):
                 if abc[index] == msg_to_send[index]:
                     table[index] = agent.domain[i]
-        agent.table = table  
+        agent.table = table
 
         # Send the assignment-nodeid-tuple
         agent.udp_send('pre_util_msg_'+str(agent.id),

@@ -3,7 +3,7 @@ def value_msg_prop(agent):
 
     print str(agent.id)+': Begin value_msg_prop'
 
-    # Wait till util_msg from all parents and pseudo-parents have arrived.
+    # Wait till value_msg from all parents and pseudo-parents have arrived.
     while True:
         all_parent_msgs_arrived = True
         for node in [agent.p]+agent.pp:
@@ -15,7 +15,8 @@ def value_msg_prop(agent):
 
     index = []
     for nodeid in [agent.p]+agent.pp:
-        index.append(agent.msgs['value_msg_'+str(nodeid)])
+        domain = agent.msgs['domain_'+str(nodeid)]
+        index.append(domain.index(agent.msgs['value_msg_'+str(nodeid)]))
     index = tuple(index)
     agent.value = agent.table[index]
 
