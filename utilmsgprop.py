@@ -118,11 +118,12 @@ def util_msg_handler(agent):
         agent.value = xi_star
         agent.max_util = max_util
 
-        # Send 'value_msg_<rootid>' xi_star to all children and pseudo-children
-        for node in agent.c+agent.pc:
-            # Send the index of assigned value
-            ind = agent.domain.index(xi_star)
-            agent.udp_send('value_msg_'+str(agent.id), ind, node)
+        # Send the index of assigned value
+        D = {}
+        ind = agent.domain.index(xi_star)
+        D[agent.id] = ind        
+        for node in agent.c:
+            agent.udp_send('value_msg_'+str(agent.id), D, node)
     else:
         util_cube, _ = get_util_cube(agent)
 
