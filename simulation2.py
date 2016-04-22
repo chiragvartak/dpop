@@ -50,17 +50,22 @@ def f24(x2, x4):
 def f42(x4, x2):
     return f24(x2, x4)
 
+agents_file = "agents-sim-2.txt"
+
 agent1 = agent.Agent(1, [0, 1], 
      {(1,3): f13,
-      (1,2): f12})
+      (1,2): f12},
+      agents_file)
 agent2 = agent.Agent(2, [0, 1], 
     {(2,4): f24,
      (2,1): f21,
-     (2,3): f23})
+     (2,3): f23},
+     agents_file)
 agent3 = agent.Agent(3, [0, 1],
     {(3, 1): f31,
-     (3, 2): f32})
-agent4 = agent.Agent(4, [0, 1], {(4,2): f42})    
+     (3, 2): f32},
+     agents_file)
+agent4 = agent.Agent(4, [0, 1], {(4,2): f42}, agents_file)    
 
 # A trick so that this process is allowed to fork.
 pid = os.getpid()

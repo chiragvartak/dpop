@@ -15,20 +15,25 @@ f[3, 1] = lambda x3, x1: x3 - x1
 f[2, 4] = add
 f[4, 2] = add
 
+agents_file = "agents-sim-3.txt"
+
 agent1 = agent.Agent(1, [0, 1], 
     {(1,4): f[1,4],
      (1,3): f[1,3],
-     (1,2): f[1,2]})
+     (1,2): f[1,2]},
+     agents_file)
 
 agent2 = agent.Agent(2, [0, 1], 
     {(2,4): f[2,4],
-     (2,1): f[2,1]})
+     (2,1): f[2,1]},
+     agents_file)
 
-agent3 = agent.Agent(3, [0, 1], {(3, 1): f[3,1]})
+agent3 = agent.Agent(3, [0, 1], {(3, 1): f[3,1]}, agents_file)
 
 agent4 = agent.Agent(4, [0, 1],
     {(4,1): f[4,1],
-     (4,2): f[4,2]})
+     (4,2): f[4,2]},
+     agents_file)
 
 # A trick so that this process is allowed to fork.
 pid = os.getpid()

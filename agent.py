@@ -10,7 +10,7 @@ import valuemsgprop
 
 
 class Agent:
-    def __init__(self, i, domain, relations):
+    def __init__(self, i, domain, relations, agents_file):
         # Use utils.get_agents_info to initialize all the agents.
         # All the information from 'agents.txt' will be retrieved and stored in
         # this dict 'agents_info'.
@@ -18,7 +18,7 @@ class Agent:
         # You can access a value as:
         # agent.agents_info[<agent_id>]['field_required']
         # Some miscellaneous information will be stored with id=42.
-        self.agents_info = utils.get_agents_info("agents.txt")
+        self.agents_info = utils.get_agents_info(agents_file)
         info = self.agents_info
 
         self.value = -1  # The value that will be selected for this agent

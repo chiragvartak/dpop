@@ -30,73 +30,91 @@ def f(c1, c2):
     else:  # c1 != c2
         return -(c1 + c2)
 
+agents_file = "agents-sim-4.txt"
+
 agent1 = agent.Agent(1, [1,2,3,4,5], 
      {(1,2): f,
       (1,8): f,
-      (1,16): f}
+      (1,16): f},
+     agents_file
     )
 agent2 = agent.Agent(2, [1,2,3,4,5], 
-     {(2,1): f}
+     {(2,1): f},
+     agents_file
     )
 agent3 = agent.Agent(3, [1,2,3,4,5], 
      {(3,14): f,
-      (3,15): f}
+      (3,15): f},
+      agents_file
     )
 agent4 = agent.Agent(4, [1,2,3,4,5], 
      {(4,12): f,
-      (4,13): f}
+      (4,13): f},
+      agents_file
     )    
 agent5 = agent.Agent(5, [1,2,3,4,5], 
-     {(5,8): f}
+     {(5,8): f},
+     agents_file
     )
 agent6 = agent.Agent(6, [1,2,3,4,5], 
-     {(6,8): f}
+     {(6,8): f},
+     agents_file
     )
 agent7 = agent.Agent(7, [1,2,3,4,5], 
      {(7,14): f,
-      (7,15): f}
+      (7,15): f},
+      agents_file
     )
 agent8 = agent.Agent(8, [1,2,3,4,5], 
      {(8,1): f,
       (8,5): f,
       (8,6): f,
       (8,9): f,
-      (8,11): f}
+      (8,11): f},
+      agents_file
     )
 agent9 = agent.Agent(9, [1,2,3,4,5], 
      {(9,8): f,
-      (9,10): f}
+      (9,10): f},
+      agents_file
     )
 agent10 = agent.Agent(10, [1,2,3,4,5], 
-     {(10,9): f}
+     {(10,9): f},
+     agents_file
     )
 agent11 = agent.Agent(11, [1,2,3,4,5], 
      {(11,8): f,
       (11,12): f,
-      (11,13): f}
+      (11,13): f},
+      agents_file
     )
 agent12 = agent.Agent(12, [1,2,3,4,5], 
      {(12,4): f,
       (12,11): f,
-      (12,16): f}
+      (12,16): f},
+      agents_file
     )
 agent13 = agent.Agent(13, [1,2,3,4,5], 
      {(13,4): f,
-      (13,11): f}
+      (13,11): f},
+      agents_file
     )
 agent14 = agent.Agent(14, [1,2,3,4,5], 
      {(14,3): f,
-      (14,7): f}
+      (14,7): f},
+      agents_file
     )
 agent15 = agent.Agent(15, [1,2,3,4,5], 
      {(15,3): f,
       (15,7): f,
-      (15,16): f}
+      (15,16): f},
+      agents_file
     )
 agent16 = agent.Agent(16, [1,2,3,4,5], 
      {(16,1): f,
       (16,12): f,
-      (16,15): f}
+      (16,15): f},
+      agents_file
     )
 
 
