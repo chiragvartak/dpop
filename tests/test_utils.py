@@ -46,7 +46,7 @@ def test_listen_func():
 
 
 def test_get_agents_info():
-    x = get_agents_info("agents.txt")
+    x = get_agents_info("agents-sim-1.txt")
     y = {1: {'IP': '127.0.0.1', 'PORT': '5001', 'is_root': 'True'},
          2: {'IP': '127.0.0.1', 'PORT': '5002'},
          3: {'IP': '127.0.0.1', 'PORT': '5003'},
