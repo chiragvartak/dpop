@@ -11,7 +11,7 @@ def value_msg_prop(agent):
     D = agent.msgs['value_msg_'+str(agent.p)]
 
     index = []
-    for nodeid in [agent.p]+agent.pp:
+    for nodeid in agent.table_ant:
         index.append(D[nodeid])
     index = tuple(index)
     agent.value = agent.table[index]

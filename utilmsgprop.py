@@ -43,6 +43,8 @@ def get_util_msg(agent):
         util_msg[index] = max_util
         stored_table[index] = xi_val
 
+    agent.table_ant = tuple([agent.p] + agent.pp)
+
     return (util_msg, stored_table)
 
 
@@ -153,6 +155,7 @@ def util_msg_handler(agent):
                 if abc[index] == msg_to_send[index]:
                     table[index] = agent.domain[i]
         agent.table = table
+        agent.table_ant = ant_to_send
 
         # Send the assignment-nodeid-tuple
         agent.udp_send('pre_util_msg_'+str(agent.id),
