@@ -63,3 +63,34 @@ def assign_depths_helper(depths, pstree, node, value):
     for child in children:
         assign_depths_helper(depths, pstree, child, value+1)
     return depths
+
+
+def get_relatives(graph, pstree):
+    """Get the p, pp, pc of the 'graph', given its 'pstree'. Children are given
+    by the 'pstree' itself."""
+
+    parents = get_parents(pstree)
+    depths = assign_depths(pstree)
+    pseudo_children = {}
+    pseudo_parents = {}
+
+    for node_id in pstree:
+        if node_id == 'Nothing':
+            continue
+
+        p = parents[node_id]
+        c = pstree[node_id]
+        pp = []
+        pc = []
+        pseudo_relatives = set(graph[node_id]) - set([p]) - set(c)
+        pseudo_relatives = list(pseudo_relatives)
+        for relative in pseudo_relatives:
+            if depths[node_id] < depths[relative]:
+                pc.append(relative)
+            else:
+                pp.append(relative)
+
+        pseudo_parents[node_id] = pp
+        pseudo_children[node_id] = pc
+
+    return (parents, pseudo_parents, pseudo_children)

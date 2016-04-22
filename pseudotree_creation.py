@@ -69,7 +69,8 @@ def pseudotree_creation(agent):
     listening_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     listening_socket.bind((info[agent.id]['IP'], int(info[agent.id]['PORT'])))
     # Creating and starting the 'listen' thread
-    listen = threading.Thread(target=utils.listen_func,
+    listen = threading.Thread(name='Listening-Thread-of-Agent-'+str(agent.id),
+                              target=utils.listen_func,
                               args=(msgs, listening_socket),
                               kwargs={'agent': agent})
     listen.setDaemon(True)

@@ -132,6 +132,8 @@ def util_msg_handler(agent):
         L_ant = list(cube_ant)
         ownid_index = L_ant.index(agent.id)
         msg_to_send = np.maximum.reduce(combined_cube, axis=ownid_index)
+        # Ant to send in pre_util_msg
+        ant_to_send = cube_ant[:ownid_index] + cube_ant[ownid_index+1:]
 
         # Creating the table to store
         cc = combined_cube
@@ -149,7 +151,7 @@ def util_msg_handler(agent):
 
         # Send the assignment-nodeid-tuple
         agent.udp_send('pre_util_msg_'+str(agent.id),
-            tuple([agent.p]+agent.pp), agent.p)
+            ant_to_send, agent.p)
 
         agent.udp_send('util_msg_'+str(agent.id), msg_to_send, agent.p)
 
