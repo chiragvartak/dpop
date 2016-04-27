@@ -48,11 +48,11 @@ def listen_func(msgs, sock, agent):
         # This first element will become the key of the 'msgs' dict.
         # The second element should be the actual data to be passed.
         # Loop ends when an exit message is sent.
-        data, addr = sock.recvfrom(1024)
+        data, addr = sock.recvfrom(65536)
         udata = pickle.loads(data) # Unpickled data
         msgs[udata[0]] = udata[1]
         print str(agent_id) + ': Msg received, ' + udata[0] + ": " + str(udata[1])
-        if udata[1] == "exit":
+        if str(udata[1]) == "exit":
             print str(agent_id)+': End listen_func'
             return
 

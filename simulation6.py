@@ -142,6 +142,6 @@ if pid == os.getpid():
 if pid == os.getpid():
     agent6.start()
     print 'max_util:', agent6.max_util
-    print 'agent1:', agent6.value
+    print 'agent6:', agent6.value
     for i in children:
         os.wait()

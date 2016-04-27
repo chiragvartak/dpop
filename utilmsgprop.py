@@ -25,8 +25,8 @@ def get_util_msg(agent):
     dim_util_msg = \
         [len(parent_domain)] + [len(info[x]['domain']) for x in agent.pp]
     dim_util_msg = dim_stored_table = tuple(dim_util_msg)
-    util_msg = np.empty(dim_util_msg, dtype=int)
-    stored_table = np.empty(dim_util_msg, dtype=int)
+    util_msg = np.empty(dim_util_msg, dtype=object)
+    stored_table = np.empty(dim_util_msg, dtype=object)
 
     lists = [parent_domain] + [info[x]['domain'] for x in agent.pp]
     indices = [range(len(parent_domain))] + \
@@ -63,7 +63,7 @@ def get_util_cube(agent):
     dim_util_msg = [len(agent.domain)] + [len(parent_domain)] + \
         [len(info[x]['domain']) for x in agent.pp]
     dim_util_msg = tuple(dim_util_msg)
-    util_msg = np.empty(dim_util_msg, dtype=int)
+    util_msg = np.empty(dim_util_msg, dtype=object)
 
     lists = [parent_domain] + [info[x]['domain'] for x in agent.pp]
     indices = [range(len(parent_domain))] + \
@@ -148,7 +148,7 @@ def util_msg_handler(agent):
         del table_shape[ownid_index]
         table_shape = tuple(table_shape)
         
-        table = np.zeros(table_shape, dtype=int)
+        table = np.zeros(table_shape, dtype=object)
         cc_rolled = np.rollaxis(cc, ownid_index)
         for i, abc in enumerate(cc_rolled):
             for index, _ in np.ndenumerate(abc):
