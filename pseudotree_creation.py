@@ -78,7 +78,7 @@ def pseudotree_creation(agent):
     
     # Wait before all agents have started listening
     print str(agent.id) + ': Waiting ...'
-    time.sleep(10)
+    time.sleep(2)
     print str(agent.id) + ': Continuing'
 
     if agent.is_root:
