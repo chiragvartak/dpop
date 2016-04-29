@@ -10,6 +10,7 @@ import time
 import utils
 import pseudotree
 import agent
+import graphs
 
 Relatives = utils.Relatives
 
@@ -100,6 +101,9 @@ def pseudotree_creation(agent):
                 graph[int(key[10:])] = list(value)
         pstree = {}
         pstree = pseudotree.dfsTree(graph, agent.id)
+
+        # Draw the pseudotree to a file called 'pstree.png'.
+        graphs.draw_pstree(graph, pstree, 'pstree.png', layout='after')
 
         # Set own fields and tell (p, pp, c, pc) to all nodes
         parents = pseudotree.get_parents(pstree)
