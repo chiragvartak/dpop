@@ -1,7 +1,9 @@
 # Simulation 5 - Graph coloring on a smaller problem instance
 
 import os
+import sys
 
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import agent
 
 
