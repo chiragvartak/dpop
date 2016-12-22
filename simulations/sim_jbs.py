@@ -132,11 +132,11 @@ if __name__ == '__main__':
     ### Information to specify to simulate ###
 
     # User id is the same as user's position co-ordinate
-    users = [3, 5, 6, 8, 10, 12, 13]
-    root_id = 8
+    users = [3, 6, 7, 9, 12]
+    root_id = 9
 
     # Basestation id is the same as BS's position co-ordinate
-    basestations = [2, 4, 7, 9, 11]
+    basestations = [2, 5, 8, 11, 14]
 
     # Number of maximum colors that will be required
     colors = k = 3
