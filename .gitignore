@@ -63,3 +63,7 @@ target/
 
 # Linux backup files
 *~
+
+# PyCharm and virtual envs
+venv/
+.idea/
